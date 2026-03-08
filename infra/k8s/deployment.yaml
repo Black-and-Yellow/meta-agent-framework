@@ -1,0 +1,130 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# Meta-Agent — Kubernetes Deployment
+# ═══════════════════════════════════════════════════════════════════════════
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meta-agent
+  labels:
+    app: meta-agent
+    component: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: meta-agent
+  template:
+    metadata:
+      labels:
+        app: meta-agent
+        component: api
+    spec:
+      containers:
+        - name: meta-agent
+          image: meta-agent:latest
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: meta-agent-config
+            - secretRef:
+                name: meta-agent-secrets
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "2000m"
+              memory: "2Gi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: meta-agent
+  labels:
+    app: meta-agent
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    app: meta-agent
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: meta-agent-config
+data:
+  API_HOST: "0.0.0.0"
+  API_PORT: "8080"
+  LOG_LEVEL: "INFO"
+  LOG_FORMAT: "json"
+  META_AGENT_MODEL: "gpt-4o"
+  META_AGENT_TEMPERATURE: "0.2"
+  MAX_REPAIR_ITERATIONS: "3"
+  EVALUATION_THRESHOLD: "0.7"
+  REDIS_URL: "redis://redis-svc:6379/0"
+  CHROMA_HOST: "chromadb-svc"
+  CHROMA_PORT: "8000"
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: meta-agent-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: meta-agent
+  minReplicas: 2
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: meta-agent-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+    nginx.ingress.kubernetes.io/rate-limit-window: "1m"
+spec:
+  rules:
+    - host: meta-agent.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: meta-agent
+                port:
+                  number: 80
