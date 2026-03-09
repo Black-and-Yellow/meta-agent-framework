@@ -70,7 +70,7 @@
 └───────────────────────────────────────────────────────────────────┘
 ```
 
-## ✨ Key Features
+## Key Features
 
 - **Dynamic Pipeline Generation**: No hardcoded graphs. The planner models custom architectures on the fly.
 - **Robust Orchestration Engine**: Built-in support for Sequential, Parallel, and DAG-based agent execution.
@@ -78,7 +78,7 @@
 - **Extensible Sandboxed Tools**: Safely integrates Web Search, Code Execution, and more through strictly permission-scoped environments.
 - **Production Ready**: Fully instrumented with OpenTelemetry and Prometheus, featuring a FastAPI asynchronous backend.
 
-## 🚀 Quick Start
+## How to run ig
 
 ```bash
 # Clone and install
@@ -99,7 +99,7 @@ uvicorn meta_agent.api.main:app --reload --port 8080
 pytest tests/ -v
 ```
 
-## 🐳 Docker
+## Docker
 
 ```bash
 # Build and run all services
@@ -113,7 +113,7 @@ docker-compose up --build
 # - Grafana:         http://localhost:3000
 ```
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 LLM_Orch/
@@ -138,7 +138,7 @@ LLM_Orch/
 └── .env.example
 ```
 
-## ⚙️ How It Works
+## How It Works
 
 1. **User submits a task** → `POST /api/v1/tasks`
 2. **Meta-Agent plans** → decomposes task into sub-tasks, selects topology
@@ -149,7 +149,7 @@ LLM_Orch/
 7. **Repair if needed** → refine parameters or rebuild the entire architecture
 8. **Result returned** → along with blueprint, evaluations, and metrics
 
-## 🧠 Key Design Decisions
+## Key Design Decisions
 
 - **Dynamic agent creation** — agents are not hardcoded; they're instantiated from Blueprint configs
 - **Graph-based orchestration** — supports sequential, parallel, hierarchical, and DAG topologies
@@ -157,7 +157,7 @@ LLM_Orch/
 - **Security-first tools** — all tool access is sandboxed, validated, and permission-scoped
 - **Observability by default** — every agent step, tool call, and evaluation is traced and metered
 
-## 🛠 Technology Stack
+## Technology Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -168,16 +168,6 @@ LLM_Orch/
 | Infrastructure | Docker, Kubernetes, GitHub Actions |
 | Testing | pytest, pytest-asyncio, httpx |
 
-## 🤝 Contributing
-
-Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-## 📜 License
+## License
 
 MIT
