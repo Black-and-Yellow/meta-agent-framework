@@ -1,0 +1,20 @@
+{
+  "name": "Meta-Agent Framework",
+  "description": "Engineered an intelligent LLM orchestration framework that dynamically designs and executes specialized AI agents.\nConstructed using FastAPI, LangChain, LangGraph, Redis, and ChromaDB atop a graph-based execution runtime.\nAutomated complex pipelines by enabling autonomous system planning, resilient self-healing loops, and secure tool execution.",
+  "github": "https://github.com/Black-and-Yellow/meta-agent-framework",
+  "live": "",
+  "techStack": [
+    "FastAPI",
+    "Python",
+    "LangChain",
+    "Redis",
+    "ChromaDB",
+    "Docker"
+  ],
+  "featured": true,
+  "thumbnail": "",
+  "status": "Completed",
+  "category": "AI Agent",
+  "date": "2025",
+  "gradient": "from-fuchsia-500/20 to-purple-600/5"
+}
